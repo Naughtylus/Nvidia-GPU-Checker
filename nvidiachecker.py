@@ -31,16 +31,16 @@ def advanceInformation():
   #Additional Info when using cuda
   if device.type == 'cuda':
       print(torch.cuda.get_device_name(0))
-      print('Memory Usage:')
+      print('Memory Information:')
+      print('Max Alloc:', round(torch.cuda.max_memory_allocated(0)/1024**3, 1), 'GB')
       print('Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
-      print('Cached:   ', round(torch.cuda.memory_cached(0)/1024**3,1), 'GB')
+      print('Reserved:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
+      print('cuDNN:    ', torch.backends.cudnn.version())
+  else:
+    print("No additional information as CPU used instead.")
 
-def watch_nvidia_smi():
+def watch_nvidia_smi(seconds):
   try:
-    print("CTRL + C to stop")
-    # Updates every 2 seconds
-    # watch -n 2 nvidia-smi
-    subprocess.run(['watch', '-n', '2', 'nvidia-smi'], check=True)
+    subprocess.run(['watch', '-n', str(seconds), 'nvidia-smi'], check=True)
   except subprocess.CalledProcessError as e:
     print(f"Error occurred: {str(e)}")
-
